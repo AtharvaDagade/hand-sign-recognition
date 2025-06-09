@@ -1,0 +1,14 @@
+numpy
+pandas
+opencv-python
+csv
+scikit-learn
+streamlit
+PIL
+os
+smtplib
+email
+copy
+dotenv
+seaborn
+matplotlib
