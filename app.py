@@ -51,13 +51,14 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 # Sidebar navigation
+pages = ["Home", "About Us", "User Manual", "Recognition Model", "Contact Us"]
+selected_page = st.sidebar.selectbox("Navigation", pages)
+
+# User account icon and username display
 if st.session_state.logged_in:
     username = st.session_state.username
     st.sidebar.markdown(f"### Welcome, {username}")
     st.sidebar.image("https://www.gravatar.com/avatar/00000000000000000000000000000000?s=200&d=mp", width=50)  # Placeholder icon
-
-pages = ["Home", "About Us", "User Manual", "Recognition Model", "Contact Us"]
-selected_page = st.sidebar.selectbox("Navigation",pages)
 
 # Logout button if logged in
 if st.session_state.logged_in:
@@ -65,12 +66,14 @@ if st.session_state.logged_in:
         st.session_state.logged_in = False
         st.sidebar.success("Logged out successfully.")
 
+
 # --- Pages ---
 
 if selected_page == "Home":
     st.title("Welcome to the Hand Gesture Recognition System")
     st.markdown("<h3 style='text-align: center;'>Explore the World of Hand Signs</h3>", unsafe_allow_html=True)
 
+    # Row 1: Hello Gesture
     col1, col2 = st.columns([1, 2])
     with col1:
         st.image("images/image_1.jpeg", use_container_width=True)
@@ -87,7 +90,8 @@ if selected_page == "Home":
 
     st.markdown("---")
 
-    col3, col4 = st.columns([2, 1])  
+    # Row 2: Thank You Gesture (Image on Right)
+    col3, col4 = st.columns([2, 1])  # Swapped the width ratio
     with col3:
         st.markdown(
             """
@@ -102,6 +106,7 @@ if selected_page == "Home":
 
     st.markdown("---")
 
+    # Row 3: Help Gesture
     col5, col6 = st.columns([1, 2])
     with col5:
         st.image("images/image_3.jpeg", use_container_width=True)
@@ -185,7 +190,7 @@ elif selected_page == "User Manual":
     "Ok", "Prosper", "Photo", "Please", "Question", "Ready", "Rock", "Run", "Shocker",
     "Sit_down", "Slow", "Stand_up", "Stop", "Teacher", "That", "This", "Together", "Up",
     "Wash", "Whats_Up", "Win", "You", "Again", "Baby", "Bird", "Busy", "Call", "Claw",
-    "Come", "Dont_like", "Check", "Clockwise", "Anti-Clockwise","Move"
+    "Come", "Dont_like"
     ]  # Replace with actual names if needed
 
     for row in range(11):
@@ -211,6 +216,16 @@ elif selected_page == "User Manual":
 
 elif selected_page == "Recognition Model":
     st.markdown("<h1 style='text-align: center;'>Real-Time Gesture Recognition</h1>", unsafe_allow_html=True)
+    
+#     @st.cache_data
+#     def load_csv_from_drive(drive_url):
+#         import pandas as pd
+#         return pd.read_csv(drive_url, header=None).iloc[:, 0].tolist()
+
+# # Google Drive direct download link (you shared this)
+#     csv_url = "https://drive.google.com/uc?export=download&id=1OQ5Tsn7m7YwyOyosqo_afZkJ8H_AqucU"
+#     keypoint_classifier_labels = load_csv_from_drive(csv_url)
+
     
     if not st.session_state.logged_in:
         st.warning("Please log in to access the recognition model.")
@@ -275,8 +290,8 @@ elif selected_page == "Recognition Model":
                                 gesture_text = point_history_labels[history_id]
                                 
 
-                cv2.putText(debug_image, gesture_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
-                cv2.putText(debug_image, accuracy, (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,255), 2)
+                cv2.putText(debug_image, str(gesture_text), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
+                cv2.putText(debug_image, str(accuracy), (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,255), 2)
                 frame_rgb = cv2.cvtColor(debug_image, cv2.COLOR_BGR2RGB)
                 img = Image.fromarray(frame_rgb)
                 stframe.image(img, channels="RGB")
@@ -329,4 +344,4 @@ if not st.session_state.get("logged_in", False):
             else:
                 # Register the new user in the database
                 add_user(username, password, "")  # You can add email or other data if necessary
-                st.sidebar.success("Registered successfully. Please login.")
+                st.sidebar.success("Registered successfully. Please login.")
